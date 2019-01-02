@@ -46,7 +46,7 @@ with tf.name_scope('InputLayer_to_HiddenLayer1'):
 	# input layer to hidden layer 1
 	w1 = tf.Variable(tf.random_normal([DNN_input_dim, hidden1_dim]),name='weight1')
 	b1 = tf.Variable(tf.random_normal([hidden1_dim]),name='bias1')
-	a1 = tf.nn.relu(tf.add(tf.matmul(flatten,w1),b1))
+	a1 = tf.nn.sigmoid(tf.add(tf.matmul(flatten,w1),b1))
 
 	# add summary
 	tf.summary.histogram("w1", w1)
@@ -57,7 +57,7 @@ with tf.name_scope('HiddenLayer1_to_HiddenLayer2'):
 	# input layer to hidden layer 2
 	w2 = tf.Variable(tf.random_normal([hidden1_dim, hidden2_dim]),name='weight2')
 	b2 = tf.Variable(tf.random_normal([hidden2_dim]),name='bias2')
-	a2 = tf.nn.relu(tf.add(tf.matmul(a1,w2),b2))
+	a2 = tf.nn.sigmoid(tf.add(tf.matmul(a1,w2),b2))
 
 	# add summary
 	tf.summary.histogram("w2", w2)
@@ -69,7 +69,7 @@ with tf.name_scope('HiddenLayer2_to_OutputLayer'):
 	# hidden layer 2 to output layer
 	w3 = tf.Variable(tf.random_normal([hidden2_dim, output_dim]),name='weight3')
 	b3 = tf.Variable(tf.random_normal([output_dim]),name='bias3')
-	y_pred = tf.add(tf.matmul(a2,w3),b3)
+	y_pred = tf.nn.sigmoid(tf.add(tf.matmul(a2,w3),b3))
 
 	# add summary
 	tf.summary.histogram("w3", w3)
@@ -100,7 +100,7 @@ with tf.Session() as sess:
    	#cv2.imshow("s",testData)
     
     output = sess.run(y_pred, feed_dict={x: testData})
-    output = output.reshape(512,512)/255
+    output = output.reshape(512,512)*255
     print(y_pred)
     print (output)
     cv2.imshow("o",output)

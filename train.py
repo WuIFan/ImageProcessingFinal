@@ -56,11 +56,13 @@ def readFile():
 	labelList = np.asarray(labelList)
 	testImageList = np.asarray(testImageList)
 	testLabelList = np.asarray(testLabelList)
+	#print(imageList)
 	imageList = imageList.reshape(len(imageList),512*512)/255
 	labelList = labelList.reshape(len(labelList),512*512)/255
 	testImageList = testImageList.reshape(len(testImageList),512*512)/255
 	testLabelList = testLabelList.reshape(len(testLabelList),512*512)/255
 	print (imageList.shape)
+	#print(imageList)
 
 	return imageList,labelList,testImageList,testLabelList
 
@@ -130,7 +132,7 @@ if __name__ == '__main__':
 		# input layer to hidden layer 1
 		w1 = tf.Variable(tf.random_normal([DNN_input_dim, hidden1_dim]),name='weight1')
 		b1 = tf.Variable(tf.random_normal([hidden1_dim]),name='bias1')
-		a1 = tf.nn.relu(tf.add(tf.matmul(flatten,w1),b1))
+		a1 = tf.nn.sigmoid(tf.add(tf.matmul(flatten,w1),b1))
 
 		# add summary
 		tf.summary.histogram("w1", w1)
@@ -141,7 +143,7 @@ if __name__ == '__main__':
 		# input layer to hidden layer 2
 		w2 = tf.Variable(tf.random_normal([hidden1_dim, hidden2_dim]),name='weight2')
 		b2 = tf.Variable(tf.random_normal([hidden2_dim]),name='bias2')
-		a2 = tf.nn.relu(tf.add(tf.matmul(a1,w2),b2))
+		a2 = tf.nn.sigmoid(tf.add(tf.matmul(a1,w2),b2))
 
 		# add summary
 		tf.summary.histogram("w2", w2)
@@ -153,7 +155,7 @@ if __name__ == '__main__':
 		# hidden layer 2 to output layer
 		w3 = tf.Variable(tf.random_normal([hidden2_dim, output_dim]),name='weight3')
 		b3 = tf.Variable(tf.random_normal([output_dim]),name='bias3')
-		y_pred = tf.add(tf.matmul(a2,w3),b3)
+		y_pred = tf.nn.sigmoid(tf.add(tf.matmul(a2,w3),b3))
 		print(y_pred)
 
 		# add summary
