@@ -37,6 +37,7 @@ def readFile():
 					labelList.append(lab)
 
 				totalNum = totalNum + len(imageData)
+				break
 			else:
 				print ("read test data:" + data[d])
 				testImageData = os.listdir("../Data/" + data[d] + "/image")
@@ -119,7 +120,7 @@ if __name__ == '__main__':
 		flatten = tf.reshape(max_pool2, [-1, 128 * 128 * 36])
 
 	learning_rate = 0.001
-	training_epochs = 5
+	training_epochs = 1
 	batch_size = 1
 
 	DNN_input_dim = 128*128*36
@@ -153,6 +154,7 @@ if __name__ == '__main__':
 		w3 = tf.Variable(tf.random_normal([hidden2_dim, output_dim]),name='weight3')
 		b3 = tf.Variable(tf.random_normal([output_dim]),name='bias3')
 		y_pred = tf.add(tf.matmul(a2,w3),b3)
+		print(y_pred)
 
 		# add summary
 		tf.summary.histogram("w3", w3)
@@ -160,7 +162,13 @@ if __name__ == '__main__':
 		tf.summary.histogram("y_pred", y_pred)
 
 	with tf.name_scope('Loss'):
-		loss = tf.reduce_mean(tf.abs(tf.subtract(y, y_pred)))
+		#loss = tf.reduce_mean(tf.abs(tf.subtract(y, y_pred)))
+		#tf.summary.scalar("loss", loss)
+		smooth = 1.
+		product = tf.multiply(y_pred, y)
+		intersection = tf.reduce_sum(product)
+		coefficient = (2. * intersection + smooth) / (tf.reduce_sum(y_pred) + tf.reduce_sum(y) + smooth)
+		loss = 1 - coefficient
 		tf.summary.scalar("loss", loss)
 
 	with tf.name_scope('Accuracy'):
@@ -178,7 +186,7 @@ if __name__ == '__main__':
 	    
 	    # 初始化Variables
 	    sess.run(tf.global_variables_initializer())
-	    writer = tf.summary.FileWriter("log_cnn/", graph=sess.graph)
+	    #writer = tf.summary.FileWriter("log_cnn/", graph=sess.graph)
 	    global_step = 0
 	    
 	    for epoch in range(training_epochs):
@@ -198,15 +206,14 @@ if __name__ == '__main__':
 	            batch_acc = sess.run(accuracy, feed_dict={x: imageList, y: labelList})
 	            
 	            # 紀錄每個batch的summary並加到writer中
-	            global_step += 1
-	            result = sess.run(merged_summary, feed_dict={x: imageList, y: labelList})
-	            writer.add_summary(result,global_step)
+	            #global_step += 1
+	            #result = sess.run(merged_summary, feed_dict={x: imageList, y: labelList})
+	            #writer.add_summary(result,global_step)
 	            
 	        losses.append(batch_loss)
 	        #val_losses.append(batch_val_loss)
-	        print("Epoch:", '%d' % (epoch+1), ", loss=", batch_loss, ", acc=", batch_acc,
-	              ", val_loss=", "batch_val_loss", ", val_acc=", "batch_val_acc")
+	        print("Epoch:", '%d' % (epoch+1), ", loss=", batch_loss, ", acc=", batch_acc)
 	        
 	    # Test Dataset
-	    print ("Test Accuracy:", sess.run(accuracy, feed_dict={x: testImageList, y: testLabelList}))
+	    #print ("Test Accuracy:", sess.run(accuracy, feed_dict={x: testImageList, y: testLabelList}))
 	    saver.save(sess,"model/model.meta")
