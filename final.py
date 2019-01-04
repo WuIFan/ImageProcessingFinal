@@ -89,28 +89,45 @@ def runAll():
 			labelData = os.listdir("../Data/" + data[d] + "/label")
 			imageData.sort()
 			labelData.sort()
+			oneDcList = []
 			for i in range(0,len(imageData)):
 				img = cv2.imread("../Data/" + data[d] + "/image/" + imageData[i],0)
 				lab = cv2.imread("../Data/" + data[d] + "/label/" + labelData[i],0)
+				print(imageData[i])
 				th = findThreshold(img)
 				ret,output = cv2.threshold(img,th,255,cv2.THRESH_BINARY)
 
 				clone = output.copy()
 				mask = np.zeros([512,512],dtype = clone.dtype)
-				disThreshold = 8000
+				#disThreshold = 8000
 
 				clone,myContours = findContours(clone,output)
 				mask = makeMask(mask,myContours)
 
 				result,ground,inter,dc = calResult(mask,lab)
 				dcList.append(dc)
+				oneDcList.append(dc)
+				if i ==0:
+					break
 
-			print (data[d],sum(dcList)/len(imageData))
+			print (oneDcList,dcList)
+			avg = sum(oneDcList)/len(imageData)
+			print (data[d],"avg:",avg)
+			print (data[d],"stdDev:",stdDev(avg,oneDcList))
 			totalNum = totalNum + len(imageData)
 			#break
 			
-
 	print ("Number of picture:",totalNum)
+	allAvg = sum(dcList)/len(imageData)
+	print ("avg DC for all",allAvg)
+	print ("avg DC for all",stdDev(allAvg,dcList))
+
+def  stdDev(avg,dcList):
+	sum = 0
+	for dc in dcList:
+		sum =  sum + np.square(avg - dc)
+	ans = np.sqrt(sum / len(dcList))
+	return ans
 
 def makeMask(mask,cnts):
 	color = [255, 255, 255]
@@ -195,6 +212,7 @@ def calResult(img1,img2):
 					inter = inter + 1
 	dc = 2 * inter / (result + ground)
 	dc = format(dc, '.5f')
+	dc = float(dc)
 	print("result:",result,"ground:",ground,"intersection:",inter,"DC:",dc)
 	return result,ground,inter,dc
 
@@ -231,11 +249,11 @@ if __name__ == '__main__':
 
 
 	### GUI ###
-	
+	'''
 	app = QApplication(sys.argv)
 	window = MainWindow()
 	window.show()
 	sys.exit(app.exec_())
-	
+	'''
 	#########
-	#runAll()
+	runAll()
