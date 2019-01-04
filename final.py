@@ -29,6 +29,13 @@ class MainWindow(QMainWindow, Ui_MainWindow):
 		datapath = fname[0]
 		pix = QPixmap(fname[0])
 		self.label_9.setPixmap(pix)
+		'''
+		img = cv2.imread(datapath,0)
+		image = QtGui.QImage(img, img.shape[1],img.shape[0], img.shape[1] * 3,QtGui.QImage.Format_RGB888)	
+		print(type(image))
+		pix.fromImage(image)
+		print("?",type(pix))
+		'''
 		#cv2.waitKey(0)
 
 
@@ -43,12 +50,17 @@ class MainWindow(QMainWindow, Ui_MainWindow):
 		# cboxImgNum to access to the ui object
 		self.label_2.setText("MainWindow??")
 		image = runOne(datapath,groundpath)
-		print ("Image",image)
-		image = QtGui.QImage(image, image.shape[1],image.shape[0], image.shape[1] * 3,QtGui.QImage.Format_RGB888)
-		print("#")
-		pix = QtGui.QPixmap(image)
-		print("?")
+		pix = QPixmap("output.png")
 		self.label_11.setPixmap(pix)
+		
+		
+		'''
+		img = QtGui.QImage(image, image.shape[1],image.shape[0], image.shape[1] * 3,QtGui.QImage.Format_Indexed8)
+		img = img.rgbSwapped()
+		pix = QPixmap()
+		pix.fromImage(img)
+		'''
+		
 		'''
 		height, width = testData.shape
 		bytesPerLine = 3 * width
@@ -203,6 +215,7 @@ def runOne(datapath,groundpath):
 	#cv2.imshow("ground",testLabel)
 
 	calResult(mask,testLabel)
+	cv2.imwrite("output.png",mask)
 	return mask
 	#cv2.waitKey(0)
 if __name__ == '__main__':
