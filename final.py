@@ -48,10 +48,13 @@ class MainWindow(QMainWindow, Ui_MainWindow):
 
 	def on_btn3_click(self):
 		# cboxImgNum to access to the ui object
-		self.label_2.setText("MainWindow??")
-		image = runOne(datapath,groundpath)
+		result,ground,inter,dc = runOne(datapath,groundpath)
 		pix = QPixmap("output.png")
 		self.label_11.setPixmap(pix)
+		self.label_2.setText(str(result))
+		self.label_4.setText(str(ground))
+		self.label_5.setText(str(inter))
+		self.label_8.setText(str(dc))
 		
 		
 		'''
@@ -99,11 +102,12 @@ def runAll():
 				clone,myContours = findContours(clone,output)
 				mask = makeMask(mask,myContours)
 
-				dcList.append(calResult(mask,lab))
+				result,ground,inter,dc = calResult(mask,lab)
+				dcList.append(dc)
 
-			print (sum(dcList)/len(imageData))
+			print (data[d],sum(dcList)/len(imageData))
 			totalNum = totalNum + len(imageData)
-			break
+			#break
 			
 
 	print ("Number of picture:",totalNum)
@@ -124,7 +128,8 @@ def findContours(clone,output):
 	myContours = []
 	while(i < len(contours)):
 		num = len(contours[i])
-		if num > 150:
+		#print(num)
+		if num > 100:
 			#print("num:",num)
 			area = cv2.contourArea(contours[i])
 			#print("area:",area)
@@ -155,7 +160,7 @@ def delByDistance(myContours,maxX,maxY):
 		if distance > disThreshold:
 			continue
 		newContours.append(cont)
-		print("X:",centerX,"Y:",centerY,"distance:",distance)
+		#print("X:",centerX,"Y:",centerY,"distance:",distance)
 	return newContours
 
 def findThreshold(testData):
@@ -170,7 +175,7 @@ def findThreshold(testData):
 			for j in range(width):
 				if temp[i ,j] == 255:
 					count = count + 1	
-		print (count)
+		#print (count)
 	#print(adj)
 	return adj
 
@@ -189,8 +194,9 @@ def calResult(img1,img2):
 				if img1[i ,j] == 255 and img2[i, j] == 255:
 					inter = inter + 1
 	dc = 2 * inter / (result + ground)
+	dc = format(dc, '.5f')
 	print("result:",result,"ground:",ground,"intersection:",inter,"DC:",dc)
-	return dc
+	return result,ground,inter,dc
 
 def runOne(datapath,groundpath):
 	#testData = cv2.imread("../Data/data01/image/image0180.png",0)
@@ -214,16 +220,22 @@ def runOne(datapath,groundpath):
 	#cv2.imshow("threshold",output)
 	#cv2.imshow("ground",testLabel)
 
-	calResult(mask,testLabel)
+	result,ground,inter,dc = calResult(mask,testLabel)
 	cv2.imwrite("output.png",mask)
-	return mask
+	return result,ground,inter,dc
 	#cv2.waitKey(0)
 if __name__ == '__main__':
 	datapath = ""
 	groundpath = ""
 	disThreshold = 8000
+
+
+	### GUI ###
+	
 	app = QApplication(sys.argv)
 	window = MainWindow()
 	window.show()
 	sys.exit(app.exec_())
+	
+	#########
 	#runAll()
