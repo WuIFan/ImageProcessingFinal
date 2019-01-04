@@ -4,6 +4,7 @@ import os, sys
 import cv2
 from PIL import Image
 from PyQt5.QtGui import *
+from PyQt5 import QtCore, QtGui
 from PyQt5.QtWidgets import QMainWindow, QApplication, QFileDialog
 from final_ui import Ui_MainWindow
 
@@ -24,22 +25,36 @@ class MainWindow(QMainWindow, Ui_MainWindow):
 
 	def on_btn1_click(self):
 		fname = QFileDialog.getOpenFileName(self, 'Open file')
-		print(fname)
-		testData = cv2.imread(fname[0],0)
-		height, width = testData.shape
-		bytesPerLine = 3 * width
-		qImg = QImage(testData.data, width, height, bytesPerLine, QImage.Format_RGB888)
-		self.label_2.setPixmap(qImg)
-		#cv2.imshow("",testData)
+		global datapath
+		datapath = fname[0]
+		pix = QPixmap(fname[0])
+		self.label_9.setPixmap(pix)
 		#cv2.waitKey(0)
 
 
 	def on_btn2_click(self):
 		fname = QFileDialog.getOpenFileName(self, 'Open file')
+		global groundpath
+		groundpath = fname[0]
+		pix = QPixmap(fname[0])
+		self.label_10.setPixmap(pix)
 
 	def on_btn3_click(self):
 		# cboxImgNum to access to the ui object
 		self.label_2.setText("MainWindow??")
+		image = runOne(datapath,groundpath)
+		print ("Image",image)
+		image = QtGui.QImage(image, image.shape[1],image.shape[0], image.shape[1] * 3,QtGui.QImage.Format_RGB888)
+		print("#")
+		pix = QtGui.QPixmap(image)
+		print("?")
+		self.label_11.setPixmap(pix)
+		'''
+		height, width = testData.shape
+		bytesPerLine = 3 * width
+		qImg = QImage(testData.data, width, height, bytesPerLine, QImage.Format_RGB888)
+		self.label_2.setPixmap(qImg)
+		'''
 
 
 def runAll():
@@ -165,16 +180,11 @@ def calResult(img1,img2):
 	print("result:",result,"ground:",ground,"intersection:",inter,"DC:",dc)
 	return dc
 
-if __name__ == '__main__':
-	disThreshold = 8000
-	app = QApplication(sys.argv)
-	window = MainWindow()
-	window.show()
-	sys.exit(app.exec_())
-	#runAll()
-	'''
-	testData = cv2.imread("../Data/data01/image/image0180.png",0)
-	testLabel = cv2.imread("../Data/data01/label/image0180.png",0)
+def runOne(datapath,groundpath):
+	#testData = cv2.imread("../Data/data01/image/image0180.png",0)
+	#testLabel = cv2.imread("../Data/data01/label/image0180.png",0)
+	testData = cv2.imread(datapath,0)
+	testLabel = cv2.imread(groundpath,0)
 	th = findThreshold(testData)
 	ret,output = cv2.threshold(testData,th,255,cv2.THRESH_BINARY)
 
@@ -186,12 +196,21 @@ if __name__ == '__main__':
 	clone,myContours = findContours(clone,output)
 	mask = makeMask(mask,myContours)
 
-	cv2.imshow("mask",mask)
+	#cv2.imshow("mask",mask)
 	#clone = cv2.bitwise_and(clone, mask)
 	#cv2.imshow("clone",clone)
-	cv2.imshow("threshold",output)
-	cv2.imshow("ground",testLabel)
+	#cv2.imshow("threshold",output)
+	#cv2.imshow("ground",testLabel)
 
 	calResult(mask,testLabel)
-	cv2.waitKey(0)
-	'''
+	return mask
+	#cv2.waitKey(0)
+if __name__ == '__main__':
+	datapath = ""
+	groundpath = ""
+	disThreshold = 8000
+	app = QApplication(sys.argv)
+	window = MainWindow()
+	window.show()
+	sys.exit(app.exec_())
+	#runAll()

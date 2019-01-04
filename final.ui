@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>961</width>
-    <height>584</height>
+    <width>1507</width>
+    <height>1200</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -74,9 +74,9 @@
    <widget class="QWidget" name="verticalLayoutWidget">
     <property name="geometry">
      <rect>
-      <x>30</x>
-      <y>140</y>
-      <width>51</width>
+      <x>0</x>
+      <y>150</y>
+      <width>81</width>
       <height>90</height>
      </rect>
     </property>
@@ -103,7 +103,7 @@
         </font>
        </property>
        <property name="text">
-        <string>result:</string>
+        <string>ground:</string>
        </property>
       </widget>
      </item>
@@ -116,7 +116,7 @@
         </font>
        </property>
        <property name="text">
-        <string>result:</string>
+        <string>intersection:</string>
        </property>
       </widget>
      </item>
@@ -129,7 +129,7 @@
         </font>
        </property>
        <property name="text">
-        <string>result:</string>
+        <string>DC:</string>
        </property>
       </widget>
      </item>
@@ -139,37 +139,37 @@
     <property name="geometry">
      <rect>
       <x>80</x>
-      <y>140</y>
+      <y>150</y>
       <width>101</width>
-      <height>90</height>
+      <height>91</height>
      </rect>
     </property>
     <layout class="QVBoxLayout" name="verticalLayout_2">
      <item>
       <widget class="QLabel" name="label_2">
        <property name="text">
-        <string>TextLabel</string>
+        <string/>
        </property>
       </widget>
      </item>
      <item>
       <widget class="QLabel" name="label_4">
        <property name="text">
-        <string>TextLabel</string>
+        <string/>
        </property>
       </widget>
      </item>
      <item>
       <widget class="QLabel" name="label_5">
        <property name="text">
-        <string>TextLabel</string>
+        <string/>
        </property>
       </widget>
      </item>
      <item>
       <widget class="QLabel" name="label_8">
        <property name="text">
-        <string>TextLabel</string>
+        <string/>
        </property>
       </widget>
      </item>
@@ -180,33 +180,8 @@
      <rect>
       <x>200</x>
       <y>0</y>
-      <width>256</width>
-      <height>256</height>
-     </rect>
-    </property>
-    <property name="sizeIncrement">
-     <size>
       <width>512</width>
       <height>512</height>
-     </size>
-    </property>
-    <property name="baseSize">
-     <size>
-      <width>512</width>
-      <height>512</height>
-     </size>
-    </property>
-    <property name="text">
-     <string/>
-    </property>
-   </widget>
-   <widget class="QLabel" name="label_10">
-    <property name="geometry">
-     <rect>
-      <x>520</x>
-      <y>0</y>
-      <width>256</width>
-      <height>256</height>
      </rect>
     </property>
     <property name="sizeIncrement">
@@ -229,9 +204,34 @@
     <property name="geometry">
      <rect>
       <x>200</x>
-      <y>260</y>
-      <width>256</width>
-      <height>256</height>
+      <y>550</y>
+      <width>512</width>
+      <height>512</height>
+     </rect>
+    </property>
+    <property name="sizeIncrement">
+     <size>
+      <width>512</width>
+      <height>512</height>
+     </size>
+    </property>
+    <property name="baseSize">
+     <size>
+      <width>512</width>
+      <height>512</height>
+     </size>
+    </property>
+    <property name="text">
+     <string/>
+    </property>
+   </widget>
+   <widget class="QLabel" name="label_10">
+    <property name="geometry">
+     <rect>
+      <x>750</x>
+      <y>0</y>
+      <width>512</width>
+      <height>512</height>
      </rect>
     </property>
     <property name="sizeIncrement">
@@ -256,7 +256,7 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>961</width>
+     <width>1507</width>
      <height>22</height>
     </rect>
    </property>
