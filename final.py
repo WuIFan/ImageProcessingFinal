@@ -93,7 +93,7 @@ def runAll():
 			for i in range(0,len(imageData)):
 				img = cv2.imread("../Data/" + data[d] + "/image/" + imageData[i],0)
 				lab = cv2.imread("../Data/" + data[d] + "/label/" + labelData[i],0)
-				print(imageData[i])
+				#print(imageData[i])
 				th = findThreshold(img)
 				ret,output = cv2.threshold(img,th,255,cv2.THRESH_BINARY)
 
@@ -107,10 +107,10 @@ def runAll():
 				result,ground,inter,dc = calResult(mask,lab)
 				dcList.append(dc)
 				oneDcList.append(dc)
-				if i ==0:
-					break
+				#if i ==0:
+				#	break
 
-			print (oneDcList,dcList)
+			#print (oneDcList,dcList)
 			avg = sum(oneDcList)/len(imageData)
 			print (data[d],"avg:",avg)
 			print (data[d],"stdDev:",stdDev(avg,oneDcList))
@@ -118,15 +118,16 @@ def runAll():
 			#break
 			
 	print ("Number of picture:",totalNum)
-	allAvg = sum(dcList)/len(imageData)
+	allAvg = sum(dcList)/totalNum
 	print ("avg DC for all",allAvg)
-	print ("avg DC for all",stdDev(allAvg,dcList))
+	print ("avg stdDev for all",stdDev(allAvg,dcList))
 
 def  stdDev(avg,dcList):
-	sum = 0
+	sums = 0
 	for dc in dcList:
-		sum =  sum + np.square(avg - dc)
-	ans = np.sqrt(sum / len(dcList))
+		sums =  sums + np.square(avg - dc)
+	ans = np.sqrt(sums / len(dcList))
+	print (len(dcList))
 	return ans
 
 def makeMask(mask,cnts):
@@ -171,6 +172,9 @@ def delByDistance(myContours,maxX,maxY):
 	newContours = []
 	for cont in myContours: 
 		M = cv2.moments(cont)
+		if M["m00"] == 0:
+			print(cont)
+			continue
 		centerX = int(M["m10"] / M["m00"])
 		centerY = int(M["m01"] / M["m00"])
 		distance = np.square(maxX - centerX) + np.square(maxY - centerY)
